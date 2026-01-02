@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MurdaRP | FiveM Roleplay</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#dc2626",
+            dark: "#050505",
+            gunmetal: "#0d0d0d",
+          },
+          boxShadow: {
+            redglow: "0 0 30px rgba(220,38,38,0.45)",
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+
+    /* Animated red grid background */
+    .grid-bg {
+      background-image: linear-gradient(rgba(220,38,38,0.12) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(220,38,38,0.12) 1px, transparent 1px);
+      background-size: 45px 45px;
+      animation: gridMove 14s linear infinite;
+    }
+
+    @keyframes gridMove {
+      from { background-position: 0 0; }
+      to { background-position: 45px 45px; }
+    }
+  </style>
+</head>
+
+<body class="bg-dark text-gray-200 font-sans">
+
+  <!-- FLOATING HAMBURGER BUTTON -->
+  <button id="menu-btn"
+    class="fixed top-6 left-6 z-50 bg-gunmetal border border-red-900/40 shadow-redglow text-white text-3xl p-3 rounded-xl hover:text-primary transition">
+    ☰
+  </button>
+
+  <!-- FLOATING LOGO TOP RIGHT -->
+    <img src="assets/mrp.png"
+        alt="MurdaRP Logo"
+        class="fixed top-6 right-6 z-50 w-20 h-auto">
+
+  <!-- FLOATING MENU PANEL -->
+  <div id="floating-menu"
+    class="hidden fixed top-24 left-6 bg-gunmetal border border-red-900/40 shadow-redglow rounded-xl p-6 z-40 w-72">
+
+    <h3 class="text-lg font-bold text-primary tracking-wide mb-4">MENU</h3>
+
+    <div class="flex flex-col space-y-4 text-lg font-semibold">
+      <a href="index.html" class="hover:text-primary">Home</a>
+      <a href="rules.html" class="hover:text-primary">Rules</a>
+      <a href="keybinds.html" class="hover:text-primary">Keybinds</a>
+      <a href="commands.html" class="hover:text-primary">Commands</a>
+      <a href="departments.html" class="hover:text-primary">Departments</a>
+    </div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="min-h-screen grid-bg flex items-center justify-center relative px-6">
+
+    <!-- Center Branding -->
+    <div class="text-center max-w-3xl">
+
+      <!-- ORIGINAL TITLE + RED GLOW -->
+      <h1 class="text-7xl font-extrabold tracking-widest text-white uppercase
+                 drop-shadow-[0_0_12px_rgba(220,38,38,0.45)]">
+        Murda<span class="text-primary">RP</span>
+      </h1>
+
+      <p class="mt-6 text-gray-400 text-lg leading-relaxed">
+        A ruthless, high‑stakes FiveM city built on creativity, consequences, and criminal empire storytelling.
+        This isn’t casual RP — this is survival.
+      </p>
+
+      <!-- Buttons -->
+      <div class="mt-10 flex flex-wrap justify-center gap-6">
+
+        <!-- CONNECT BUTTON (RED) -->
+        <a href="fivem://connect/45.141.24.234:30120"
+           class="bg-primary text-white px-12 py-4 rounded-xl font-bold text-xl tracking-wide shadow-redglow hover:bg-red-700 transition">
+          CONNECT NOW
+        </a>
+
+        <!-- DISCORD BUTTON (WHITE BG, RED TEXT) -->
+        <a href="https://discord.gg/NyTC6mpNwR" target="_blank"
+           class="bg-white text-primary px-12 py-4 rounded-xl font-bold text-xl tracking-wide border border-white hover:bg-gray-200 transition">
+          JOIN DISCORD
+        </a>
+
+      </div>
+    </div>
+
+    <!-- FLOATING SERVER STATUS PANEL -->
+    <div class="absolute bottom-10 right-10 bg-gunmetal border border-red-900/40 p-6 rounded-xl shadow-redglow w-72">
+      <h3 class="text-lg font-bold text-primary tracking-wide">SERVER STATUS</h3>
+
+      <div class="mt-4 space-y-3 text-sm font-semibold">
+        <div class="flex justify-between">
+          <span class="text-gray-400">Status</span>
+          <span id="server-status" class="text-red-500">Offline</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Players</span>
+          <span id="player-count">0 / 60</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Framework</span>
+          <span class="text-gray-300">QBCore</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU SCRIPT -->
+  <script>
+    const menuBtn = document.getElementById("menu-btn");
+    const floatingMenu = document.getElementById("floating-menu");
+
+    menuBtn.addEventListener("click", () => {
+      floatingMenu.classList.toggle("hidden");
+    });
+  </script>
+
+  <!-- SERVER STATUS SCRIPT -->
+  <script>
+    async function updatePlayerCount() {
+      const playerEl = document.getElementById("player-count");
+      const statusEl = document.getElementById("server-status");
+
+      try {
+        const res = await fetch("http://45.141.24.234:30120/players.json");
+        const data = await res.json();
+
+        playerEl.textContent = `${data.length} / 60`;
+        statusEl.textContent = "Online";
+        statusEl.classList.remove("text-red-500");
+        statusEl.classList.add("text-green-400");
+      } catch {
+        playerEl.textContent = "0 / 60";
+        statusEl.textContent = "Offline";
+        statusEl.classList.remove("text-green-400");
+        statusEl.classList.add("text-red-500");
+      }
+    }
+
+    updatePlayerCount();
+    setInterval(updatePlayerCount, 10000);
+  </script>
+
+</body>
+</html>
