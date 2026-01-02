@@ -44,31 +44,10 @@
 
 <body class="bg-dark text-gray-200 font-sans">
 
-  <!-- FLOATING HAMBURGER BUTTON -->
-  <button id="menu-btn"
-    class="fixed top-6 left-6 z-50 bg-gunmetal border border-red-900/40 shadow-redglow text-white text-3xl p-3 rounded-xl hover:text-primary transition">
-    ☰
-  </button>
-
   <!-- FLOATING LOGO TOP RIGHT -->
-    <img src="assets/mrp.png"
-        alt="MurdaRP Logo"
-        class="fixed top-6 right-6 z-50 w-20 h-auto">
-
-  <!-- FLOATING MENU PANEL -->
-  <div id="floating-menu"
-    class="hidden fixed top-24 left-6 bg-gunmetal border border-red-900/40 shadow-redglow rounded-xl p-6 z-40 w-72">
-
-    <h3 class="text-lg font-bold text-primary tracking-wide mb-4">MENU</h3>
-
-    <div class="flex flex-col space-y-4 text-lg font-semibold">
-      <a href="index.html" class="hover:text-primary">Home</a>
-      <a href="rules.html" class="hover:text-primary">Rules</a>
-      <a href="keybinds.html" class="hover:text-primary">Keybinds</a>
-      <a href="commands.html" class="hover:text-primary">Commands</a>
-      <a href="departments.html" class="hover:text-primary">Departments</a>
-    </div>
-  </div>
+  <img src="assets/mrp.png"
+      alt="MurdaRP Logo"
+      class="fixed top-6 right-6 z-50 w-20 h-auto">
 
   <!-- HERO SECTION -->
   <section class="min-h-screen grid-bg flex items-center justify-center relative px-6">
@@ -125,16 +104,6 @@
       </div>
     </div>
   </section>
-
-  <!-- MENU SCRIPT -->
-  <script>
-    const menuBtn = document.getElementById("menu-btn");
-    const floatingMenu = document.getElementById("floating-menu");
-
-    menuBtn.addEventListener("click", () => {
-      floatingMenu.classList.toggle("hidden");
-    });
-  </script>
 
   <!-- SERVER STATUS SCRIPT -->
   <script>
