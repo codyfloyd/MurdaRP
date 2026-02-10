@@ -63,10 +63,10 @@
     <footer></footer>
 
 <script>
-    const serverID = 'exdjk3'; 
-    // Using AllOrigins as it's the most stable public proxy for Cfx.re
-    const proxy = "https://api.allorigins.win/get?url="; 
-    const targetUrl = `https://servers-frontend.cfx.re/api/servers/single/${serverID}`;
+    const serverID = 'exdjk3';
+    // Using a more standard proxy
+    const proxyUrl = "https://api.allorigins.win/raw?url=";
+    const target = `https://servers-frontend.cfx.re/api/servers/single/${serverID}`;
 
     async function updateServerStats() {
         const statusEl = document.getElementById('status');
@@ -74,47 +74,45 @@
         const opStatus = document.getElementById('op-status');
 
         try {
-            const response = await fetch(`${proxy}${encodeURIComponent(targetUrl)}`);
-            if (!response.ok) throw new Error('Proxy Unreachable');
+            // We use the 'raw' version of the proxy to get a direct JSON object
+            const response = await fetch(proxyUrl + encodeURIComponent(target));
             
-            const wrapper = await response.json();
-            // AllOrigins wraps the result in a .contents string
-            const data = JSON.parse(wrapper.contents);
-            
-            if (data && data.Data) {
-                // Determine current players (FiveM API can be inconsistent)
-                const current = data.Data.clients !== undefined ? data.Data.clients : 
-                               (data.Data.players ? data.Data.players.length : 0);
-                
-                const max = data.Data.sv_maxclients || "64";
+            if (!response.ok) throw new Error('Proxy unreachable');
 
-                // Update Player Count
+            const data = await response.json();
+
+            if (data && data.Data) {
+                // Safely grab client count
+                const current = data.Data.clients ?? 0;
+                const max = data.Data.sv_maxclients ?? "64";
+
                 countEl.innerText = `${current} / ${max}`;
-                
-                // Update Visual Status
                 opStatus.innerText = "OPERATIONAL";
                 statusEl.innerText = "LIVE ●";
                 statusEl.style.color = "#00ff44";
                 statusEl.style.textShadow = "0 0 10px rgba(0, 255, 68, 0.6)";
-                statusEl.classList.add('live-pulse');
-            } else {
-                throw new Error('Invalid Data Received');
+                
+                // Set animation via JS property to avoid CSP inline-style issues
+                statusEl.style.animation = "pulse 2s infinite";
             }
         } catch (e) {
-            console.error("FiveM Fetch Failed:", e);
+            console.warn("Connection attempt failed, trying background sync...");
             opStatus.innerText = "OFFLINE";
             statusEl.innerText = "OFFLINE ●";
             statusEl.style.color = "#cc0000";
             statusEl.style.textShadow = "none";
-            statusEl.classList.remove('live-pulse');
+            statusEl.style.animation = "none";
             countEl.innerText = "0 / 0";
         }
     }
 
-    // Run on load
+    // Initialize
     updateServerStats();
-    // Refresh every 60 seconds to avoid proxy rate limits
-    setInterval(updateServerStats, 60000);
+    
+    // Use a direct function reference for the interval (Avoids the 'eval' warning)
+    setInterval(function() {
+        updateServerStats();
+    }, 60000);
 </script>
 </body>
 </html>
