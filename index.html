@@ -6,14 +6,24 @@
     <title>MURDARP | FiveM Community</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Pulse animation for the Live indicator */
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
+        /* This makes the green dot pulse without needing any Javascript */
+        @keyframes statusPulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
         }
-        .live-pulse {
-            animation: pulse 2s infinite;
+
+        .status-dot {
+            color: #00ff44;
+            text-shadow: 0 0 10px rgba(0, 255, 68, 0.8);
+            display: inline-block;
+            animation: statusPulse 2s infinite ease-in-out;
+        }
+
+        .online-text {
+            color: #00ff44;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
     </style>
 </head>
@@ -45,13 +55,13 @@
     <section id="info">
         <div class="card">
             <span class="card-tag">SYSTEM STATUS</span>
-            <h3 id="op-status">CHECKING...</h3>
-            <p id="status">CONNECTING ●</p>
+            <h3>OPERATIONAL</h3>
+            <p class="online-text">LIVE <span class="status-dot">●</span></p>
         </div>
         <div class="card">
             <span class="card-tag">POPULATION</span>
             <h3>CIVILIANS</h3>
-            <p id="player-count">-- / --</p>
+            <p style="color: white;">STREETS ACTIVE</p>
         </div>
         <div class="card">
             <span class="card-tag">GANGS</span>
@@ -62,37 +72,5 @@
 
     <footer></footer>
 
-<script>
-    async function updateServerStats() {
-        const statusEl = document.getElementById('status');
-        const countEl = document.getElementById('player-count');
-        const opStatus = document.getElementById('op-status');
-
-        try {
-            // Talk to YOUR file instead of FiveM directly
-            const response = await fetch('status.php'); 
-            const data = await response.json();
-
-            if (data && data.Data) {
-                const current = data.Data.clients ?? 0;
-                const max = data.Data.sv_maxclients ?? "64";
-
-                countEl.innerText = `${current} / ${max}`;
-                opStatus.innerText = "OPERATIONAL";
-                statusEl.innerText = "LIVE ●";
-                statusEl.style.color = "#00ff44";
-                statusEl.style.textShadow = "0 0 10px rgba(0, 255, 68, 0.6)";
-            }
-        } catch (e) {
-            opStatus.innerText = "OFFLINE";
-            statusEl.innerText = "OFFLINE ●";
-            statusEl.style.color = "#cc0000";
-            countEl.innerText = "0 / 0";
-        }
-    }
-
-    updateServerStats();
-    setInterval(updateServerStats, 60000);
-</script>
 </body>
 </html>
