@@ -5,33 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MURDARP | FiveM Community</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* This makes the green dot pulse without needing any Javascript */
-        @keyframes statusPulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.1); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .status-dot {
-            color: #00ff44;
-            text-shadow: 0 0 10px rgba(0, 255, 68, 0.8);
-            display: inline-block;
-            animation: statusPulse 2s infinite ease-in-out;
-        }
-
-        .online-text {
-            color: #00ff44;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-    </style>
 </head>
 <body>
 
     <nav>
         <div class="logo">MURDA<span>RP</span></div>
-        <ul>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links">
             <li><a href="index.html" class="active">HOME</a></li>
             <li><a href="rules.html">RULES</a></li>
             <li><a href="features.html">FEATURES</a></li>
@@ -43,7 +27,7 @@
 
     <header id="home">
         <div class="hero-content">
-            <p class="pre-title" style="color: #cc0000; letter-spacing: 5px; font-weight: bold;">ESTABLISHED IN THE TRENCHES</p>
+            <p class="pre-title">ESTABLISHED IN THE TRENCHES</p>
             <h1>OWN THE<span>STREETS</span></h1>
             <div class="hero-btns">
                 <a href="fivem://connect/exdjk3" class="btn-main">JOIN SERVER</a>
@@ -52,7 +36,7 @@
         </div>
     </header>
 
-    <section id="info">
+    <section id="info" class="container">
         <div class="card">
             <span class="card-tag">SYSTEM STATUS</span>
             <h3>OPERATIONAL</h3>
@@ -70,7 +54,14 @@
         </div>
     </section>
 
-    <footer></footer>
+    <script>
+        const menu = document.querySelector('#mobile-menu');
+        const menuLinks = document.querySelector('.nav-links');
 
+        menu.addEventListener('click', function() {
+            menu.classList.toggle('is-active');
+            menuLinks.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>
