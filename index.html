@@ -63,20 +63,14 @@
     <footer></footer>
 
 <script>
-    const serverID = 'exdjk3';
-    // This specific worker proxy strips the headers that Cfx.re blocks
-    const proxy = "https://cors-anywhere.azm.workers.dev/https://servers-frontend.cfx.re/api/servers/single/";
-
     async function updateServerStats() {
         const statusEl = document.getElementById('status');
         const countEl = document.getElementById('player-count');
         const opStatus = document.getElementById('op-status');
 
         try {
-            const response = await fetch(proxy + serverID);
-            
-            if (!response.ok) throw new Error("API Blocked");
-
+            // Talk to YOUR file instead of FiveM directly
+            const response = await fetch('status.php'); 
             const data = await response.json();
 
             if (data && data.Data) {
@@ -88,26 +82,16 @@
                 statusEl.innerText = "LIVE ●";
                 statusEl.style.color = "#00ff44";
                 statusEl.style.textShadow = "0 0 10px rgba(0, 255, 68, 0.6)";
-                statusEl.style.animation = "pulse 2s infinite";
             }
         } catch (e) {
-            console.warn("MurdaRP Status: Primary API busy, switching to stable display.");
-            
-            // If the API blocks us, we show "JOIN VIA F8" so players know it's actually up
-            opStatus.innerText = "STREETS ACTIVE";
-            statusEl.innerText = "JOIN VIA F8 ●";
-            statusEl.style.color = "#ff0303"; 
-            countEl.innerText = "ONLINE";
+            opStatus.innerText = "OFFLINE";
+            statusEl.innerText = "OFFLINE ●";
+            statusEl.style.color = "#cc0000";
+            countEl.innerText = "0 / 0";
         }
     }
 
-    // Initialize animation
-    const style = document.createElement('style');
-    style.innerHTML = `@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }`;
-    document.head.appendChild(style);
-
     updateServerStats();
-    // Refresh every 60 seconds
     setInterval(updateServerStats, 60000);
 </script>
 </body>
