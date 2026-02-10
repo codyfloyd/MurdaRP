@@ -5,27 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MURDARP | FiveM Community</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* This makes the green dot pulse without needing any Javascript */
-        @keyframes statusPulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.1); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .status-dot {
-            color: #00ff44;
-            text-shadow: 0 0 10px rgba(0, 255, 68, 0.8);
-            display: inline-block;
-            animation: statusPulse 2s infinite ease-in-out;
-        }
-
-        .online-text {
-            color: #00ff44;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-    </style>
 </head>
 <body>
 
@@ -56,12 +35,12 @@
         <div class="card">
             <span class="card-tag">SYSTEM STATUS</span>
             <h3>OPERATIONAL</h3>
-            <p class="online-text">LIVE <span class="status-dot">●</span></p>
+            <p id="status" style="color: #00ff44;">LIVE ●</p>
         </div>
         <div class="card">
             <span class="card-tag">POPULATION</span>
             <h3>CIVILIANS</h3>
-            <p style="color: white;">STREETS ACTIVE</p>
+            <p id="player-count">STREETS ACTIVE</p>
         </div>
         <div class="card">
             <span class="card-tag">GANGS</span>
@@ -71,6 +50,6 @@
     </section>
 
     <footer></footer>
-
+    
 </body>
 </html>
