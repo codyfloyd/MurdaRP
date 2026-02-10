@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MURDARP | FiveM Community</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Pulse animation for the Live indicator */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        .live-pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
 </head>
 <body>
 
@@ -34,7 +45,7 @@
     <section id="info">
         <div class="card">
             <span class="card-tag">SYSTEM STATUS</span>
-            <h3>OPERATIONAL</h3>
+            <h3 id="op-status">CHECKING...</h3>
             <p id="status">CONNECTING ●</p>
         </div>
         <div class="card">
@@ -51,25 +62,59 @@
 
     <footer></footer>
 
-    <script>
-        const serverID = 'exdjk3'; 
-        async function updateServerStats() {
-            try {
-                const response = await fetch(`https://servers-frontend.cfx.re/api/servers/single/${serverID}`);
-                const data = await response.json();
-                if (data && data.Data) {
-                    document.getElementById('player-count').innerText = `${data.Data.clients} / ${data.Data.sv_maxclients}`;
-                    const statusEl = document.getElementById('status');
-                    statusEl.innerText = "LIVE ●";
-                    statusEl.style.color = "#00ff44";
-                }
-            } catch (e) {
-                document.getElementById('status').innerText = "OFFLINE ●";
-                document.getElementById('status').style.color = "#cc0000";
+<script>
+    const serverID = 'exdjk3'; 
+    // Using AllOrigins as it's the most stable public proxy for Cfx.re
+    const proxy = "https://api.allorigins.win/get?url="; 
+    const targetUrl = `https://servers-frontend.cfx.re/api/servers/single/${serverID}`;
+
+    async function updateServerStats() {
+        const statusEl = document.getElementById('status');
+        const countEl = document.getElementById('player-count');
+        const opStatus = document.getElementById('op-status');
+
+        try {
+            const response = await fetch(`${proxy}${encodeURIComponent(targetUrl)}`);
+            if (!response.ok) throw new Error('Proxy Unreachable');
+            
+            const wrapper = await response.json();
+            // AllOrigins wraps the result in a .contents string
+            const data = JSON.parse(wrapper.contents);
+            
+            if (data && data.Data) {
+                // Determine current players (FiveM API can be inconsistent)
+                const current = data.Data.clients !== undefined ? data.Data.clients : 
+                               (data.Data.players ? data.Data.players.length : 0);
+                
+                const max = data.Data.sv_maxclients || "64";
+
+                // Update Player Count
+                countEl.innerText = `${current} / ${max}`;
+                
+                // Update Visual Status
+                opStatus.innerText = "OPERATIONAL";
+                statusEl.innerText = "LIVE ●";
+                statusEl.style.color = "#00ff44";
+                statusEl.style.textShadow = "0 0 10px rgba(0, 255, 68, 0.6)";
+                statusEl.classList.add('live-pulse');
+            } else {
+                throw new Error('Invalid Data Received');
             }
+        } catch (e) {
+            console.error("FiveM Fetch Failed:", e);
+            opStatus.innerText = "OFFLINE";
+            statusEl.innerText = "OFFLINE ●";
+            statusEl.style.color = "#cc0000";
+            statusEl.style.textShadow = "none";
+            statusEl.classList.remove('live-pulse');
+            countEl.innerText = "0 / 0";
         }
-        updateServerStats();
-        setInterval(updateServerStats, 60000);
-    </script>
+    }
+
+    // Run on load
+    updateServerStats();
+    // Refresh every 60 seconds to avoid proxy rate limits
+    setInterval(updateServerStats, 60000);
+</script>
 </body>
 </html>
