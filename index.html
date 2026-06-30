@@ -32,7 +32,6 @@
 
     .text-gradient {
       background: linear-gradient(135deg, #ff007a, #ff8a00);
-      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       display: inline-block;
@@ -373,7 +372,7 @@
   <div id="age-gate" class="age-gate-wrapper">
     <div class="age-gate-content">
       <h1 class="text-gradient">MURDARP</h1>
-      <p>This community features mature content, active gang warfare, and excessive violence. You must be 18 years of age or older to enter the city.</p>
+      <p>This community features mature content, active gang warfare, and exessive violence. You must be 18 years of age or older to enter the city.</p>
       <div class="age-buttons">
         <button id="btn-yes" class="btn-primary">I AM 18 OR OLDER</button>
         <button id="btn-no" class="btn-secondary">I AM UNDER 18</button>
@@ -449,7 +448,7 @@
     <div class="container">
       <div class="text-content">
         <h2>OUR <span class="text-gradient">PURPOSE</span></h2>
-        <p>MurdaRP was created out of a desire for a genuine, immersive roleplay experience free from pay-to-win mechanics. We built this server to be a long-term home for serious roleplayers who want high-stakes crime, an active police force, intricate heists, and a truly dynamic economy.</p>
+        <p>MURDARP was created out of a desire for a genuine, immersive roleplay experience. We built this city for serious roleplayers who want high-stakes crime, an active police force, intricate heists, and a truly dynamic economy. We provide the infrastructure; you write the story.</p>
       </div>
       <div class="visual-box">
         <img src="https://cdn.discordapp.com/attachments/1315572398208057364/1477055196025721024/image.png?ex=6a44de19&is=6a438c99&hm=4b3c3dadb7d40ae8351e0327981bdb95c494f95ef1154606caf38bb13ac727e1&" alt="Our Purpose">
@@ -459,7 +458,6 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      
       const ageGate = document.getElementById("age-gate");
       const body = document.body;
 
@@ -472,7 +470,6 @@
         localStorage.setItem("is18Plus", "true");
         ageGate.style.opacity = '0';
         ageGate.style.transition = 'opacity 0.4s ease';
-        
         setTimeout(() => {
           ageGate.style.display = "none";
           body.style.overflowY = "auto"; 
@@ -484,41 +481,34 @@
       });
 
       const cfxCode = 'exdjk3'; 
-      const endpoint = `https://servers-frontend.fivem.net/api/servers/single/${cfxCode}`;
+      const endpoint = `https://corsproxy.io/?url=https://servers-frontend.fivem.net/api/servers/single/${cfxCode}`;
 
       fetch(endpoint)
         .then(response => {
-          if (!response.ok) throw new Error('Network response was not ok');
+          if (!response.ok) throw new Error('API Response not ok');
           return response.json();
         })
         .then(data => {
-          if (!data || !data.Data) throw new Error('Invalid data structure');
-
+          if (!data.Data) throw new Error('Data structure missing');
           const playersOnline = data.Data.clients;
           const maxPlayers = data.Data.sv_maxclients;
-          
           const countElement = document.getElementById('player-count');
           countElement.innerText = `${playersOnline} / ${maxPlayers} ONLINE`;
           countElement.style.color = "#1a1a1a"; 
           countElement.style.fontWeight = "800";
-          
           const statusText = document.getElementById('status-text');
           statusText.innerText = "ONLINE ●";
           statusText.className = "status-online";
         })
         .catch(error => {
-          console.error('Server offline, unlisted, or Cfx API is down:', error);
-          
           const countElement = document.getElementById('player-count');
           countElement.innerText = 'NETWORK OFFLINE';
           countElement.style.color = "#64748b"; 
-          
           const statusText = document.getElementById('status-text');
           statusText.innerText = "OFFLINE ○";
           statusText.className = "status-offline";
         });
     });
   </script>
-
 </body>
 </html>
